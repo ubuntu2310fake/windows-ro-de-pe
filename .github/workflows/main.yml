@@ -1,0 +1,33 @@
+name: Linux ssh (8gb ram / 60gb ssd / 2core / VT-x support)
+
+on: 
+  workflow_dispatch:
+    inputs:
+      ngrok:
+        description: 'ngrok auth token'
+        required: true
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: chuẩn bị phần mềm
+        run: |
+          sudo apt update -y
+          sudo apt install curl wget qemu-kvm cpulimit -y
+          wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+          tar -xf ngrok-v3-stable-linux-amd64.tgz
+          chmod +x ngrok
+          ./ngrok config add-authtoken "${{ github.event.inputs.ngrok }}"
+          nohup ./ngrok tcp --region ap 23 &>/dev/null &
+      - name: đang setup linũ
+        run: |
+          sudo chmod 666 /dev/kvm
+          echo "dang tai linux"
+          sudo wget -O /mnt/file.qcow2 "https://app.vagrantup.com/linuxusersfake/boxes/win11modrdpwf/versions/1.0/providers/qemu/amd64/vagrant.box" &>/dev/null &
+          while ps axg | grep -vw grep | grep -w wget > /dev/null; do sleep 1; done
+          echo "thanh cong"
+          curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"tcp:..([^"]*).*/\1/p'
+          sudo cpulimit -l 75 -- sudo kvm -M q35,usb=on -device usb-tablet -cpu host -smp 2,cores=2 -m 8G -device virtio-balloon-pci -vga qxl -net nic,netdev=n0 -netdev user,id=n0,hostfwd=tcp::23-:3389 -boot c -device virtio-serial-pci -device virtio-rng-pci -enable-kvm -drive file=/mnt/file.qcow2,if=virtio -vnc :0 -bios /usr/share/ovmf/OVMF.fd
+          while ps axg | grep -vw grep | grep -w qemu-system-x86_64 > /dev/null; do sleep 1; done
+          while ps axg | grep -vw grep | grep -w kvm > /dev/null; do sleep 1; done
