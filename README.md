@@ -12,4 +12,4 @@ vt-x ~~not support~~ support
 
 2c 8gb ram 60gb ssd
 
-note: windows server is sh!t
+note: windows server is sh!t, khi tạo chờ 15 phút, Windows đang được cài đặt online trên internet, sau 15 phút qemu sẽ được mở và enable rdp
