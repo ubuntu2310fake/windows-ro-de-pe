@@ -1,4 +1,4 @@
-name: Linux ssh (8gb ram / 60gb ssd / 2core / VT-x support)
+name: W11 (8gb ram / 60gb ssd / 2core / VT-x support)
 
 on: 
   workflow_dispatch:
@@ -20,10 +20,10 @@ jobs:
           chmod +x ngrok
           ./ngrok config add-authtoken "${{ github.event.inputs.ngrok }}"
           nohup ./ngrok tcp --region ap 23 &>/dev/null &
-      - name: đang setup linũ
+      - name: đang setup windows
         run: |
           sudo chmod 666 /dev/kvm
-          echo "dang tai linux"
+          echo "dang tai windows"
           sudo wget -O /mnt/file.qcow2 "https://app.vagrantup.com/linuxusersfake/boxes/win11modrdpwf/versions/1.0/providers/qemu/amd64/vagrant.box" &>/dev/null &
           while ps axg | grep -vw grep | grep -w wget > /dev/null; do sleep 1; done
           echo "thanh cong"
