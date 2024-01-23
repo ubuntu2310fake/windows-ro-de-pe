@@ -2,10 +2,6 @@ name: Tailscale (for advance user)
 
 on: 
   workflow_dispatch:
-    inputs:
-      ngrok:
-        description: 'ngrok auth token'
-        required: true
  
 jobs:
   build:
@@ -27,6 +23,7 @@ jobs:
           echo "thanh cong"
           tailscale ip -4
           echo "dang nhap voi port 3389"
+          echo "neu muon view console dang nhap voi port 5900"
           sudo cpulimit -l 75 -- sudo kvm -M q35,usb=on -device usb-tablet -cpu host -smp 2,cores=2 -m 8G -device virtio-balloon-pci -vga qxl -net nic,netdev=n0 -netdev user,id=n0,hostfwd=tcp::3389-:3389 -boot c -device virtio-serial-pci -device virtio-rng-pci -enable-kvm -drive file=/mnt/file.qcow2,if=virtio -vnc :0 -bios /usr/share/ovmf/OVMF.fd
           while ps axg | grep -vw grep | grep -w qemu-system-x86_64 > /dev/null; do sleep 1; done
           while ps axg | grep -vw grep | grep -w kvm > /dev/null; do sleep 1; done
